@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://b3q5tnkjes1it"
+path="res://.godot/imported/Robienie w Gacie.wav-2a418559f2273752a641fd6f955e20a2.sample"
+
+[deps]
+
+source_file="res://sounds/Robienie w Gacie.wav"
+dest_files=["res://.godot/imported/Robienie w Gacie.wav-2a418559f2273752a641fd6f955e20a2.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=2
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://mecvpi4ucsgk"]
+
+[ext_resource type="AudioStream" uid="uid://b3q5tnkjes1it" path="res://sounds/Robienie w Gacie.wav" id="1_3h6ak"]
+
+[node name="Music" type="AudioStreamPlayer" unique_id=1257275008]
+stream = ExtResource("1_3h6ak")
+autoplay = true
+bus = &"Music"
