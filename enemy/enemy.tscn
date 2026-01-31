@@ -2,16 +2,11 @@
 
 [ext_resource type="Texture2D" uid="uid://b7brq3cj3ymwe" path="res://enemy/Spider.png" id="1_2mvqj"]
 [ext_resource type="Script" uid="uid://cypeqi8as1xon" path="res://enemy/enemy.gd" id="1_ofsxj"]
-[ext_resource type="Script" uid="uid://bxprd7rhseg0c" path="res://enemy/enemy_stats.gd" id="2_p200p"]
 [ext_resource type="Script" uid="uid://7t67oxuxdgfj" path="res://enemy/patrol_ai.gd" id="4_p200p"]
 [ext_resource type="PackedScene" uid="uid://b075xx4nkbv6x" path="res://enemy/awareness_bar.tscn" id="5_pmsee"]
 [ext_resource type="Script" uid="uid://j4s2iqlnhca1" path="res://enemy/enemy_state_controller.gd" id="6_1wwld"]
 [ext_resource type="Script" uid="uid://5nx28wpllmp5" path="res://enemy/chase_ai.gd" id="7_y5vj3"]
 [ext_resource type="Script" uid="uid://biee2efs3u828" path="res://enemy/enemy_move_controller.gd" id="8_5ffra"]
-
-[sub_resource type="Resource" id="Resource_pmsee"]
-script = ExtResource("2_p200p")
-metadata/_custom_type_script = "uid://bxprd7rhseg0c"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p200p"]
 radius = 6.0827627
@@ -79,9 +74,8 @@ _data = {
 
 [node name="Enemy" type="CharacterBody2D" unique_id=611258072]
 collision_layer = 2
-collision_mask = 5
+collision_mask = 7
 script = ExtResource("1_ofsxj")
-stats = SubResource("Resource_pmsee")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1699684277]
 position = Vector2(0, 3)
@@ -152,12 +146,12 @@ script = ExtResource("6_1wwld")
 patrol_ai = NodePath("../PatrolAI")
 chase_ai = NodePath("../ChaseAI")
 
-[node name="PatrolAI" type="Node" parent="." unique_id=1828580343 node_paths=PackedStringArray("character", "anchor", "move_controller")]
+[node name="PatrolAI" type="Node" parent="." unique_id=1828580343 node_paths=PackedStringArray("character", "move_controller", "anchor")]
 script = ExtResource("4_p200p")
 character = NodePath("..")
+move_controller = NodePath("../EnemyMoveController")
 anchor = NodePath("../Anchor")
 speed = 15.0
-move_controller = NodePath("../EnemyMoveController")
 
 [node name="ChaseAI" type="Node" parent="." unique_id=545560065 node_paths=PackedStringArray("character", "agent", "anchor", "move_controller")]
 script = ExtResource("7_y5vj3")
@@ -167,9 +161,8 @@ anchor = NodePath("../Anchor")
 speed = 30.0
 move_controller = NodePath("../EnemyMoveController")
 
-[node name="EnemyMoveController" type="Node" parent="." unique_id=1315847102 node_paths=PackedStringArray("character")]
+[node name="EnemyMoveController" type="Node" parent="." unique_id=1315847102]
 script = ExtResource("8_5ffra")
-character = NodePath("..")
 
 [connection signal="body_entered" from="Anchor/RadialArea" to="." method="_on_radial_area_body_entered"]
 [connection signal="body_exited" from="Anchor/RadialArea" to="." method="_on_radial_area_body_exited"]

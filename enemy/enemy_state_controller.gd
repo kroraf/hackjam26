@@ -15,7 +15,7 @@ func _ready() -> void:
 
 func _set_state(new_state: State):
 	_state = new_state
-	
+	EventBus.state_changed.emit(new_state)
 	match _state:
 		State.PATROL:
 			#print("entering patrol state")
@@ -27,9 +27,9 @@ func _set_state(new_state: State):
 			chase_ai.set_physics_process(true)
 			
 
-func _on_player_spotted() -> void:
-	_set_state(State.CHASE)
-	print("spotted!")
+func _on_player_spotted(character) -> void:
+	character.enemy_state_controller._set_state(State.CHASE)
+	#print("spotted!")
 
-func _on_player_lost() -> void:
-	_set_state(State.PATROL)
+func _on_player_lost(character) -> void:
+	character.enemy_state_controller._set_state(State.PATROL)

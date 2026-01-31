@@ -1,9 +1,9 @@
 class_name EnemyMoveController extends Node
 
 @onready var agent: NavigationAgent2D = $"../NavigationAgent2D"
-@export var character: CharacterBody2D
+#@export var character: CharacterBody2D
 
-func move(delta, target, speed):
+func move(delta, target, character, speed):
 	agent.target_position = target
 
 	if agent.is_navigation_finished():

@@ -6,7 +6,7 @@ var stats: EnemyStats:
 		stats = new_stats
 		if stats is EnemyStats:
 			update_awareness()
-			stats.awareness_changed.connect(_on_awareness_changed)
+			EventBus.awareness_changed.connect(_on_awareness_changed)
 
 func _ready():
 	modulate = Color.TRANSPARENT

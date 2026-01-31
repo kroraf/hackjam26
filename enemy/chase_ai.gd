@@ -20,7 +20,7 @@ func _ready() -> void:
 	agent.target_desired_distance = 12.0
 
 func _physics_process(delta: float) -> void:
-	move_controller.move(delta, player.global_position, speed)
+	move_controller.move(delta, player.global_position, character, speed)
 
 	character.move_and_slide()
 

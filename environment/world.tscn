@@ -35,19 +35,25 @@ tile_map_data = PackedByteArray("AAD9/wEAAAAMAA4AAAD9/wAAAAAAAAwAAAD9////AAAAAAw
 
 [node name="Enemies" type="Node" parent="." unique_id=850198446]
 
-[node name="Enemy" parent="Enemies" unique_id=611258072 node_paths=PackedStringArray("patrol_path", "player") instance=ExtResource("3_ktyio")]
+[node name="Enemy" parent="Enemies" unique_id=611258072 node_paths=PackedStringArray("player", "start_marker", "finish_marker") instance=ExtResource("3_ktyio")]
 position = Vector2(-69, -63)
-patrol_path = NodePath("../../Paths/Path1")
 player = NodePath("../../Player2/Player")
+start_marker = NodePath("../../Marker1")
+finish_marker = NodePath("../../Marker2")
+
+[node name="Enemy2" parent="Enemies" unique_id=1889466792 node_paths=PackedStringArray("player", "start_marker", "finish_marker") instance=ExtResource("3_ktyio")]
+player = NodePath("../../Player2/Player")
+start_marker = NodePath("../../Marker1")
+finish_marker = NodePath("../../Marker2")
 
 [node name="Player2" type="Node" parent="." unique_id=1007194107]
 
 [node name="Player" parent="Player2" unique_id=861575181 instance=ExtResource("1_01qa0")]
-position = Vector2(-19, 76)
+position = Vector2(-249, -13)
 
 [node name="PhantomCamera2D" type="Node2D" parent="Player2" unique_id=448681200 node_paths=PackedStringArray("follow_target")]
 top_level = true
-position = Vector2(-19, 76)
+position = Vector2(-249, -13)
 script = ExtResource("3_wpdqf")
 follow_mode = 1
 follow_target = NodePath("../Player")
@@ -60,7 +66,7 @@ metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
 [node name="Camera2D" type="Camera2D" parent="." unique_id=699209460]
 physics_interpolation_mode = 1
 top_level = true
-position = Vector2(-19, 76)
+position = Vector2(-249, -13)
 zoom = Vector2(0.8, 0.8)
 process_callback = 0
 editor_draw_limits = true
@@ -87,3 +93,9 @@ texture = SubResource("NoiseTexture2D_50k4n")
 
 [node name="Path1" type="Path2D" parent="Paths" unique_id=1596570903]
 curve = SubResource("Curve2D_na063")
+
+[node name="Marker1" type="Marker2D" parent="." unique_id=22643122]
+position = Vector2(-175, -122)
+
+[node name="Marker2" type="Marker2D" parent="." unique_id=1495889986]
+position = Vector2(52, -73)

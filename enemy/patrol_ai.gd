@@ -1,31 +1,42 @@
 extends Node
 class_name PatrolAI
 
+# -------------------------------------------------
+# ENUMS
+# -------------------------------------------------
+
 enum State {
-	RETURN_TO_PATH,
-	ON_PATH
+	RETURN_TO_START,
+	PATROLLING
 }
 
-enum PatrolMode {
-	LOOP,
-	PING_PONG
-}
+# -------------------------------------------------
+# EXPORTS
+# -------------------------------------------------
 
 @export var character: CharacterBody2D
+@export var move_controller: EnemyMoveController
 @export var anchor: Node2D
 
 @export var speed: float = 120.0
 @export var arrive_distance: float = 8.0
-@export var patrol_mode: PatrolMode = PatrolMode.PING_PONG
-@export var move_controller: EnemyMoveController
 
-var patrol_path: Path2D
-var _curve: Curve2D
-var _path_length: float = 0.0
+# -------------------------------------------------
+# INTERNAL STATE
+# -------------------------------------------------
 
-var _distance: float = 0.0
-var _direction: float = 1.0
-var _state: State = State.RETURN_TO_PATH
+var start_marker: Marker2D
+var finish_marker: Marker2D
+
+var _state: State = State.RETURN_TO_START
+var _going_to_finish: bool = true
+
+var _agent: NavigationAgent2D
+var _return_target_set: bool = false
+
+# -------------------------------------------------
+# LIFECYCLE
+# -------------------------------------------------
 
 func _ready() -> void:
 	if character == null:
@@ -33,128 +44,108 @@ func _ready() -> void:
 		set_physics_process(false)
 		return
 
-	patrol_path = character.patrol_path
-	if patrol_path == null:
-		push_warning("PatrolAI: character.patrol_path is null.")
+	start_marker = character.start_marker
+	finish_marker = character.finish_marker
+	
+	if start_marker == null or finish_marker == null:
+		push_warning("PatrolAI: start_marker or finish_marker not set on enemy.")
 		set_physics_process(false)
 		return
 
-	_curve = patrol_path.curve
-	if _curve == null:
-		push_warning("PatrolAI: patrol_path has no Curve2D.")
+	_agent = character.get_node_or_null("NavigationAgent2D")
+	if _agent == null:
+		push_warning("PatrolAI: NavigationAgent2D missing.")
 		set_physics_process(false)
 		return
 
-	_curve.bake_interval = 5.0
-	_path_length = _curve.get_baked_length()
+	_agent.path_desired_distance = arrive_distance
+	_agent.target_desired_distance = arrive_distance
 
-	if _is_on_path():
-		print("---------------------------")
-		_distance = _get_closest_offset()
-		_state = State.ON_PATH
-	else:
-		_state = State.RETURN_TO_PATH
+	call_deferred("_initialize_state")
+
+func _initialize_state() -> void:
+	_state = State.RETURN_TO_START
+	_return_target_set = false
+
+# -------------------------------------------------
+# UPDATE
+# -------------------------------------------------
 
 func _physics_process(delta: float) -> void:
 	match _state:
-		State.RETURN_TO_PATH:
-			_move_to_path_start(delta)
-			print("returning...")
+		State.RETURN_TO_START:
+			_move_to_start()
 
-		State.ON_PATH:
-			# If we somehow got off the path, go back
-			if not _is_on_path():
-				_state = State.RETURN_TO_PATH
-			else:
-				_patrol(delta)
+		State.PATROLLING:
+			_patrol(delta)
 
+# -------------------------------------------------
+# PUBLIC API (CALLED BY BRAIN)
+# -------------------------------------------------
 
-# ----------------------------
-# RETURN TO PATH
-# ----------------------------
+func activate_patrol() -> void:
+	_state = State.RETURN_TO_START
+	_return_target_set = false
 
-func _move_to_path_start(delta: float) -> void:
-	var start_global: Vector2 = patrol_path.to_global(
-		_curve.sample_baked(0.0)
+func stop_patrol() -> void:
+	character.velocity = Vector2.ZERO
+
+# -------------------------------------------------
+# RETURN TO START (NAVIGATION)
+# -------------------------------------------------
+
+func _move_to_start() -> void:
+	if not _return_target_set:
+		_agent.target_position = start_marker.global_position
+		_return_target_set = true
+
+	if _agent.is_navigation_finished():
+		_agent.target_position = character.global_position
+		_state = State.PATROLLING
+		character.velocity = Vector2.ZERO
+		return
+
+	_move_along_nav()
+
+# -------------------------------------------------
+# PATROL LOGIC (DIRECT MOVE)
+# -------------------------------------------------
+
+func _patrol(delta) -> void:
+	var target: Marker2D = (
+		finish_marker if _going_to_finish else start_marker
 	)
-	move_controller.move(delta, start_global, speed)
-	#var to_start: Vector2 = start_global - character.global_position
-	#if to_start.length() <= arrive_distance:
-		#_distance = 0.0
-		#_state = State.ON_PATH
-		#character.velocity = Vector2.ZERO
-		#return
-#
-	#var dir: Vector2 = to_start.normalized()
-	#character.velocity = dir * speed
+
+	var to_target: Vector2 = target.global_position - character.global_position
+	if to_target.length() <= arrive_distance:
+		_going_to_finish = not _going_to_finish
+		return
+
+	character.velocity = to_target.normalized() * speed
+	
 	character.move_and_slide()
 	_update_facing_from_velocity()
-	
 
-# ----------------------------
-# ON PATH (RAIL PATROL)
-# ----------------------------
+# -------------------------------------------------
+# NAVIGATION MOVEMENT
+# -------------------------------------------------
 
-func _patrol(delta: float) -> void:
-	_distance += speed * _direction * delta
+func _move_along_nav() -> void:
+	var next_pos: Vector2 = _agent.get_next_path_position()
+	var dir: Vector2 = next_pos - character.global_position
 
-	match patrol_mode:
-		PatrolMode.LOOP:
-			_distance = fposmod(_distance, _path_length)
+	if dir.length() < 0.01:
+		character.velocity = Vector2.ZERO
+		return
 
-		PatrolMode.PING_PONG:
-			if _distance > _path_length:
-				_distance = _path_length
-				_direction = -1.0
-			elif _distance < 0.0:
-				_distance = 0.0
-				_direction = 1.0
+	character.velocity = dir.normalized() * speed
+	character.move_and_slide()
+	_update_facing_from_velocity()
 
-	var local_pos: Vector2 = _curve.sample_baked(_distance)
-	character.global_position = patrol_path.to_global(local_pos)
-	_update_facing_from_path()
-
-# ----------------------------
+# -------------------------------------------------
 # HELPERS
-# ----------------------------
-
-func _is_on_path() -> bool:
-	var closest_dist: float = (
-		patrol_path.to_global(
-			_curve.get_closest_point(
-				patrol_path.to_local(character.global_position)
-			)
-		) - character.global_position
-	).length()
-
-	return closest_dist <= arrive_distance
-
-func _get_closest_offset() -> float:
-	return _curve.get_closest_offset(
-		patrol_path.to_local(character.global_position)
-	)
+# -------------------------------------------------
 
 func _update_facing_from_velocity() -> void:
 	if anchor != null and abs(character.velocity.x) > 0.01:
 		anchor.scale.x = sign(character.velocity.x)
-
-func _update_facing_from_path() -> void:
-	if anchor == null:
-		return
-
-	var look_ahead: float = clamp(
-		_distance + _direction * 1.0,
-		0.0,
-		_path_length
-	)
-
-	var current: Vector2 = patrol_path.to_global(
-		_curve.sample_baked(_distance)
-	)
-	var ahead: Vector2 = patrol_path.to_global(
-		_curve.sample_baked(look_ahead)
-	)
-
-	var dx: float = ahead.x - current.x
-	if abs(dx) > 0.01:
-		anchor.scale.x = sign(dx)
