@@ -1,6 +1,11 @@
 extends Node
 class_name PatrolAI
 
+enum State {
+	RETURN_TO_PATH,
+	ON_PATH
+}
+
 enum PatrolMode {
 	LOOP,
 	PING_PONG
@@ -9,15 +14,18 @@ enum PatrolMode {
 @export var character: CharacterBody2D
 @export var anchor: Node2D
 
-@export var speed: float = 30
+@export var speed: float = 120.0
+@export var arrive_distance: float = 8.0
 @export var patrol_mode: PatrolMode = PatrolMode.PING_PONG
-@export var snap_to_path_on_start: bool = true
+@export var move_controller: EnemyMoveController
 
+var patrol_path: Path2D
 var _curve: Curve2D
-var _path: Path2D
-var _path_length := 0.0
-var _distance := 0.0
-var _direction := 1.0
+var _path_length: float = 0.0
+
+var _distance: float = 0.0
+var _direction: float = 1.0
+var _state: State = State.RETURN_TO_PATH
 
 func _ready() -> void:
 	if character == null:
@@ -25,30 +33,69 @@ func _ready() -> void:
 		set_physics_process(false)
 		return
 
-	_path = character.patrol_path
-	if _path == null:
+	patrol_path = character.patrol_path
+	if patrol_path == null:
 		push_warning("PatrolAI: character.patrol_path is null.")
 		set_physics_process(false)
 		return
 
-	_curve = _path.curve
+	_curve = patrol_path.curve
 	if _curve == null:
-		push_warning("PatrolAI: Path2D has no Curve2D.")
+		push_warning("PatrolAI: patrol_path has no Curve2D.")
 		set_physics_process(false)
 		return
 
 	_curve.bake_interval = 5.0
 	_path_length = _curve.get_baked_length()
 
-	if snap_to_path_on_start:
-		_set_position_from_distance()
+	if _is_on_path():
+		print("---------------------------")
+		_distance = _get_closest_offset()
+		_state = State.ON_PATH
+	else:
+		_state = State.RETURN_TO_PATH
 
 func _physics_process(delta: float) -> void:
-	_advance_distance(delta)
-	_set_position_from_distance()
-	_update_facing()
+	match _state:
+		State.RETURN_TO_PATH:
+			_move_to_path_start(delta)
+			print("returning...")
 
-func _advance_distance(delta: float) -> void:
+		State.ON_PATH:
+			# If we somehow got off the path, go back
+			if not _is_on_path():
+				_state = State.RETURN_TO_PATH
+			else:
+				_patrol(delta)
+
+
+# ----------------------------
+# RETURN TO PATH
+# ----------------------------
+
+func _move_to_path_start(delta: float) -> void:
+	var start_global: Vector2 = patrol_path.to_global(
+		_curve.sample_baked(0.0)
+	)
+	move_controller.move(delta, start_global, speed)
+	#var to_start: Vector2 = start_global - character.global_position
+	#if to_start.length() <= arrive_distance:
+		#_distance = 0.0
+		#_state = State.ON_PATH
+		#character.velocity = Vector2.ZERO
+		#return
+#
+	#var dir: Vector2 = to_start.normalized()
+	#character.velocity = dir * speed
+	character.move_and_slide()
+	_update_facing_from_velocity()
+	
+
+# ----------------------------
+# ON PATH (RAIL PATROL)
+# ----------------------------
+
+func _patrol(delta: float) -> void:
 	_distance += speed * _direction * delta
 
 	match patrol_mode:
@@ -63,11 +110,35 @@ func _advance_distance(delta: float) -> void:
 				_distance = 0.0
 				_direction = 1.0
 
-func _set_position_from_distance() -> void:
-	var local_pos := _curve.sample_baked(_distance)
-	character.global_position = _path.to_global(local_pos)
+	var local_pos: Vector2 = _curve.sample_baked(_distance)
+	character.global_position = patrol_path.to_global(local_pos)
+	_update_facing_from_path()
 
-func _update_facing() -> void:
+# ----------------------------
+# HELPERS
+# ----------------------------
+
+func _is_on_path() -> bool:
+	var closest_dist: float = (
+		patrol_path.to_global(
+			_curve.get_closest_point(
+				patrol_path.to_local(character.global_position)
+			)
+		) - character.global_position
+	).length()
+
+	return closest_dist <= arrive_distance
+
+func _get_closest_offset() -> float:
+	return _curve.get_closest_offset(
+		patrol_path.to_local(character.global_position)
+	)
+
+func _update_facing_from_velocity() -> void:
+	if anchor != null and abs(character.velocity.x) > 0.01:
+		anchor.scale.x = sign(character.velocity.x)
+
+func _update_facing_from_path() -> void:
 	if anchor == null:
 		return
 
@@ -77,9 +148,13 @@ func _update_facing() -> void:
 		_path_length
 	)
 
-	var current := _path.to_global(_curve.sample_baked(_distance))
-	var ahead := _path.to_global(_curve.sample_baked(look_ahead))
+	var current: Vector2 = patrol_path.to_global(
+		_curve.sample_baked(_distance)
+	)
+	var ahead: Vector2 = patrol_path.to_global(
+		_curve.sample_baked(look_ahead)
+	)
 
-	var dx := ahead.x - current.x
+	var dx: float = ahead.x - current.x
 	if abs(dx) > 0.01:
 		anchor.scale.x = sign(dx)

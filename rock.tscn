@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://crso2hvxjpvqi"]
+
+[ext_resource type="Texture2D" uid="uid://cvl6dqfwa0i5q" path="res://tileset/obstacles-and-objects.png" id="1_o0qsl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_68h2w"]
+atlas = ExtResource("1_o0qsl")
+region = Rect2(0, 64, 16, 16)
+
+[node name="Rock" type="Sprite2D" unique_id=2098422873]
+texture = SubResource("AtlasTexture_68h2w")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="." unique_id=33219505]

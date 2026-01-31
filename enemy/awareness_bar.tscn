@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://b075xx4nkbv6x"]
+
+[ext_resource type="Script" uid="uid://cqmk5fqet2i8l" path="res://enemy/awareness_bar.gd" id="1_cxe5p"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cxe5p"]
+bg_color = Color(0.2509804, 0.2509804, 0.2509804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n1iul"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[node name="AwarenessBar" type="ProgressBar" unique_id=1065139143]
+offset_right = 24.0
+offset_bottom = 4.0
+theme_override_styles/background = SubResource("StyleBoxFlat_cxe5p")
+theme_override_styles/fill = SubResource("StyleBoxFlat_n1iul")
+step = 1.0
+value = 50.0
+show_percentage = false
+script = ExtResource("1_cxe5p")

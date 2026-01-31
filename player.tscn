@@ -14,8 +14,9 @@ fill = 1
 fill_from = Vector2(0.50427353, 0.517094)
 fill_to = Vector2(0.85470086, 0.26068377)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_4flbx"]
-size = Vector2(10, 6)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_i3pqv"]
+radius = 3.0
+height = 10.0
 
 [sub_resource type="Animation" id="Animation_onrkg"]
 length = 0.001
@@ -186,14 +187,16 @@ frame = 1
 [node name="PointLight2D" type="PointLight2D" parent="Anchor" unique_id=558764103]
 shadow_enabled = true
 shadow_filter = 2
+shadow_filter_smooth = 2.0
 texture = SubResource("GradientTexture2D_hqtel")
 texture_scale = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1156969481]
-position = Vector2(0, 2)
-shape = SubResource("RectangleShape2D_4flbx")
+position = Vector2(0, 4)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_i3pqv")
 
-[node name="Node" type="Node" parent="." unique_id=2089700734 node_paths=PackedStringArray("character")]
+[node name="TopDownMovementController" type="Node" parent="." unique_id=2089700734 node_paths=PackedStringArray("character")]
 script = ExtResource("2_onrkg")
 character = NodePath("..")
 

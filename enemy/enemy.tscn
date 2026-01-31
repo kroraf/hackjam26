@@ -2,7 +2,19 @@
 
 [ext_resource type="Texture2D" uid="uid://b7brq3cj3ymwe" path="res://enemy/Spider.png" id="1_2mvqj"]
 [ext_resource type="Script" uid="uid://cypeqi8as1xon" path="res://enemy/enemy.gd" id="1_ofsxj"]
+[ext_resource type="Script" uid="uid://bxprd7rhseg0c" path="res://enemy/enemy_stats.gd" id="2_p200p"]
 [ext_resource type="Script" uid="uid://7t67oxuxdgfj" path="res://enemy/patrol_ai.gd" id="4_p200p"]
+[ext_resource type="PackedScene" uid="uid://b075xx4nkbv6x" path="res://enemy/awareness_bar.tscn" id="5_pmsee"]
+[ext_resource type="Script" uid="uid://j4s2iqlnhca1" path="res://enemy/enemy_state_controller.gd" id="6_1wwld"]
+[ext_resource type="Script" uid="uid://5nx28wpllmp5" path="res://enemy/chase_ai.gd" id="7_y5vj3"]
+[ext_resource type="Script" uid="uid://biee2efs3u828" path="res://enemy/enemy_move_controller.gd" id="8_5ffra"]
+
+[sub_resource type="Resource" id="Resource_pmsee"]
+script = ExtResource("2_p200p")
+metadata/_custom_type_script = "uid://bxprd7rhseg0c"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_p200p"]
+radius = 6.0827627
 
 [sub_resource type="Gradient" id="Gradient_ppra6"]
 offsets = PackedFloat32Array(0.510274, 0.6849315)
@@ -10,11 +22,21 @@ colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_p200p"]
 gradient = SubResource("Gradient_ppra6")
+width = 100
+height = 100
 fill = 1
 fill_from = Vector2(0.508547, 0.50427353)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ppra6"]
-size = Vector2(16, 8)
+[sub_resource type="CircleShape2D" id="CircleShape2D_ppra6"]
+radius = 50.0
+
+[sub_resource type="Gradient" id="Gradient_p200p"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_pmsee"]
+gradient = SubResource("Gradient_p200p")
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_ppra6"]
+polygon = PackedVector2Array(-24, -24, -24, 24, 64, 24, -12, 8, -12, -8, 64, -24)
 
 [sub_resource type="Animation" id="Animation_p200p"]
 length = 0.001
@@ -59,29 +81,95 @@ _data = {
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_ofsxj")
+stats = SubResource("Resource_pmsee")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1699684277]
+position = Vector2(0, 3)
+shape = SubResource("CircleShape2D_p200p")
 
 [node name="Anchor" type="Node2D" parent="." unique_id=511153516]
 
 [node name="Sprite2D" type="Sprite2D" parent="Anchor" unique_id=303430188]
+self_modulate = Color(0.48570347, 0.48570353, 0.48570347, 1)
 texture_filter = 1
 texture = ExtResource("1_2mvqj")
 hframes = 5
 vframes = 5
 
-[node name="PointLight2D" type="PointLight2D" parent="Anchor" unique_id=1523730282]
+[node name="RadialLight" type="PointLight2D" parent="Anchor" unique_id=1523730282]
 shadow_enabled = true
 shadow_filter = 2
+shadow_filter_smooth = 2.0
 texture = SubResource("GradientTexture2D_p200p")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1699684277]
-position = Vector2(0, 3)
-shape = SubResource("RectangleShape2D_ppra6")
+[node name="RadialArea" type="Area2D" parent="Anchor" unique_id=1898215393]
+collision_layer = 0
 
-[node name="PatrolAI" type="Node" parent="." unique_id=1828580343 node_paths=PackedStringArray("character", "anchor")]
-script = ExtResource("4_p200p")
-character = NodePath("..")
-anchor = NodePath("../Anchor")
+[node name="RadialAreaCollisionShape" type="CollisionShape2D" parent="Anchor/RadialArea" unique_id=1696910502]
+shape = SubResource("CircleShape2D_ppra6")
+debug_color = Color(0.7911688, 0.31314877, 0.74235207, 0.41960785)
+
+[node name="ConeLight" type="PointLight2D" parent="Anchor" unique_id=685420402]
+visible = false
+shadow_enabled = true
+shadow_filter = 2
+shadow_filter_smooth = 2.0
+texture = SubResource("GradientTexture2D_pmsee")
+offset = Vector2(32, 0)
+
+[node name="ConeLightOccluder" type="LightOccluder2D" parent="Anchor" unique_id=2082932538]
+visible = false
+occluder = SubResource("OccluderPolygon2D_ppra6")
+occluder_light_mask = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=509226862]
 libraries/ = SubResource("AnimationLibrary_1wwld")
 autoplay = &"walk"
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=684332540]
+path_desired_distance = 5.0
+target_desired_distance = 5.0
+path_postprocessing = 1
+avoidance_enabled = true
+debug_use_custom = true
+debug_path_custom_color = Color(0.80488634, 0.00051095604, 0.80614626, 1)
+
+[node name="AwarenessBar" parent="." unique_id=1065139143 instance=ExtResource("5_pmsee")]
+offset_left = -12.0
+offset_top = -14.0
+offset_right = 12.0
+offset_bottom = -10.0
+
+[node name="AwarenessGainTimer" type="Timer" parent="." unique_id=2102208752]
+wait_time = 0.5
+
+[node name="AwarenessLooseTimer" type="Timer" parent="." unique_id=207405868]
+wait_time = 0.5
+
+[node name="EnemyStateController" type="Node" parent="." unique_id=249018209 node_paths=PackedStringArray("patrol_ai", "chase_ai")]
+script = ExtResource("6_1wwld")
+patrol_ai = NodePath("../PatrolAI")
+chase_ai = NodePath("../ChaseAI")
+
+[node name="PatrolAI" type="Node" parent="." unique_id=1828580343 node_paths=PackedStringArray("character", "anchor", "move_controller")]
+script = ExtResource("4_p200p")
+character = NodePath("..")
+anchor = NodePath("../Anchor")
+speed = 15.0
+move_controller = NodePath("../EnemyMoveController")
+
+[node name="ChaseAI" type="Node" parent="." unique_id=545560065 node_paths=PackedStringArray("character", "agent", "anchor", "move_controller")]
+script = ExtResource("7_y5vj3")
+character = NodePath("..")
+agent = NodePath("../NavigationAgent2D")
+anchor = NodePath("../Anchor")
+speed = 30.0
+move_controller = NodePath("../EnemyMoveController")
+
+[node name="EnemyMoveController" type="Node" parent="." unique_id=1315847102 node_paths=PackedStringArray("character")]
+script = ExtResource("8_5ffra")
+character = NodePath("..")
+
+[connection signal="body_entered" from="Anchor/RadialArea" to="." method="_on_radial_area_body_entered"]
+[connection signal="body_exited" from="Anchor/RadialArea" to="." method="_on_radial_area_body_exited"]
+[connection signal="velocity_computed" from="NavigationAgent2D" to="PatrolAI" method="_on_navigation_agent_2d_velocity_computed"]
