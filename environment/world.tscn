@@ -22,12 +22,6 @@ height = 1000
 noise = SubResource("FastNoiseLite_ktyio")
 color_ramp = SubResource("Gradient_na063")
 
-[sub_resource type="Curve2D" id="Curve2D_na063"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, -126, -14, 0, 0, 0, 0, 76, -19)
-}
-point_count = 2
-
 [node name="World" type="Node2D" unique_id=704715653]
 
 [node name="Floor" parent="." unique_id=1813963748 instance=ExtResource("1_na063")]
@@ -36,15 +30,16 @@ tile_map_data = PackedByteArray("AAD9/wEAAAAMAA4AAAD9/wAAAAAAAAwAAAD9////AAAAAAw
 [node name="Enemies" type="Node" parent="." unique_id=850198446]
 
 [node name="Enemy" parent="Enemies" unique_id=611258072 node_paths=PackedStringArray("player", "start_marker", "finish_marker") instance=ExtResource("3_ktyio")]
-position = Vector2(-69, -63)
+position = Vector2(-71, -65)
 player = NodePath("../../Player2/Player")
-start_marker = NodePath("../../Marker1")
-finish_marker = NodePath("../../Marker2")
+start_marker = NodePath("../../Markers/Marker1")
+finish_marker = NodePath("../../Markers/Marker2")
 
 [node name="Enemy2" parent="Enemies" unique_id=1889466792 node_paths=PackedStringArray("player", "start_marker", "finish_marker") instance=ExtResource("3_ktyio")]
+position = Vector2(92, -41)
 player = NodePath("../../Player2/Player")
-start_marker = NodePath("../../Marker1")
-finish_marker = NodePath("../../Marker2")
+start_marker = NodePath("../../Markers/Marker1")
+finish_marker = NodePath("../../Markers/Marker2")
 
 [node name="Player2" type="Node" parent="." unique_id=1007194107]
 
@@ -82,20 +77,21 @@ color = Color(0.35531303, 0.3553138, 0.35531348, 1)
 
 [node name="Parallax2D" type="Parallax2D" parent="." unique_id=1683384919]
 scroll_scale = Vector2(0.9, 0.9)
+repeat_size = Vector2(1000, 1000)
 autoscroll = Vector2(-10, -10)
 repeat_times = 3
 
 [node name="Fog" type="Sprite2D" parent="Parallax2D" unique_id=607381853]
 z_index = 1
 texture = SubResource("NoiseTexture2D_50k4n")
+metadata/_edit_lock_ = true
 
-[node name="Paths" type="Node" parent="." unique_id=2088791530]
+[node name="Markers" type="Node" parent="." unique_id=2088791530]
 
-[node name="Path1" type="Path2D" parent="Paths" unique_id=1596570903]
-curve = SubResource("Curve2D_na063")
-
-[node name="Marker1" type="Marker2D" parent="." unique_id=22643122]
+[node name="Marker1" type="Marker2D" parent="Markers" unique_id=22643122]
 position = Vector2(-175, -122)
 
-[node name="Marker2" type="Marker2D" parent="." unique_id=1495889986]
+[node name="Marker2" type="Marker2D" parent="Markers" unique_id=1495889986]
 position = Vector2(52, -73)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1905066905]

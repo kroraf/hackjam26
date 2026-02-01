@@ -1,5 +1,8 @@
 [gd_scene format=3 uid="uid://mecvpi4ucsgk"]
 
+[ext_resource type="AudioStream" uid="uid://bbtnt8ad3bfxi" path="res://sounds/3 glosniej i bez ciszy.wav" id="1_3h6ak"]
+
 [node name="Music" type="AudioStreamPlayer" unique_id=1257275008]
+stream = ExtResource("1_3h6ak")
 autoplay = true
 bus = &"Music"

@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://b7brq3cj3ymwe" path="res://enemy/Spider.png" id="1_2mvqj"]
 [ext_resource type="Script" uid="uid://cypeqi8as1xon" path="res://enemy/enemy.gd" id="1_ofsxj"]
+[ext_resource type="Texture2D" uid="uid://bdglvghnnj8yx" path="res://enemy/SquadLeader.png" id="2_5ffra"]
 [ext_resource type="Script" uid="uid://7t67oxuxdgfj" path="res://enemy/patrol_ai.gd" id="4_p200p"]
 [ext_resource type="PackedScene" uid="uid://b075xx4nkbv6x" path="res://enemy/awareness_bar.tscn" id="5_pmsee"]
 [ext_resource type="Script" uid="uid://j4s2iqlnhca1" path="res://enemy/enemy_state_controller.gd" id="6_1wwld"]
@@ -34,7 +35,7 @@ gradient = SubResource("Gradient_p200p")
 polygon = PackedVector2Array(-24, -24, -24, 24, 64, 24, -12, 8, -12, -8, 64, -24)
 
 [sub_resource type="Animation" id="Animation_p200p"]
-length = 0.001
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -46,6 +47,18 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Anchor/Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [5]
 }
 
 [sub_resource type="Animation" id="Animation_pmsee"]
@@ -65,6 +78,18 @@ tracks/0/keys = {
 "update": 1,
 "values": [5, 6, 7, 8]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Anchor/Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [5, 6]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1wwld"]
 _data = {
@@ -83,7 +108,15 @@ shape = SubResource("CircleShape2D_p200p")
 
 [node name="Anchor" type="Node2D" parent="." unique_id=511153516]
 
+[node name="Sprite" type="Sprite2D" parent="Anchor" unique_id=2142855645]
+modulate = Color(1, 1, 0.09019608, 1)
+texture = ExtResource("2_5ffra")
+hframes = 5
+vframes = 7
+frame = 5
+
 [node name="Sprite2D" type="Sprite2D" parent="Anchor" unique_id=303430188]
+visible = false
 self_modulate = Color(0.48570347, 0.48570353, 0.48570347, 1)
 texture_filter = 1
 texture = ExtResource("1_2mvqj")
@@ -125,7 +158,6 @@ path_desired_distance = 5.0
 target_desired_distance = 5.0
 path_postprocessing = 1
 avoidance_enabled = true
-debug_enabled = true
 debug_use_custom = true
 debug_path_custom_color = Color(0.80488634, 0.00051095604, 0.80614626, 1)
 

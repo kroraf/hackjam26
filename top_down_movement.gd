@@ -20,8 +20,16 @@ func _physics_process(delta: float) -> void:
 	character.move_and_slide()
 	
 	if input_vector != Vector2.ZERO:
-		character.animation_player.play("walk")
-		if character.anchor != null and input_vector.x != 0.0:
-				character.anchor.scale.x = sign(input_vector.x)
+		if Input.is_action_pressed("hide"):
+			character.animation_player.play("crawl")
+			if character.anchor != null and input_vector.x != 0.0:
+					character.anchor.scale.x = sign(input_vector.x)
+		else:
+			character.animation_player.play("walk")
+			if character.anchor != null and input_vector.x != 0.0:
+					character.anchor.scale.x = sign(input_vector.x)
 	else:
-		character.animation_player.play("idle")
+		if Input.is_action_pressed("hide"):
+			character.animation_player.play("crawl")
+		else:
+			character.animation_player.play("idle")

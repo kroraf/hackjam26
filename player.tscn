@@ -158,6 +158,17 @@ tracks/0/keys = {
 "update": 1,
 "values": [0, 1]
 }
+tracks/1/type = "audio"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AudioStreamPlayer")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"clips": [],
+"times": PackedFloat32Array()
+}
+tracks/1/use_blend = true
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_b26j0"]
 _data = {
@@ -203,3 +214,5 @@ character = NodePath("..")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1553547353]
 libraries/ = SubResource("AnimationLibrary_b26j0")
 autoplay = &"idle"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=61448972]
