@@ -1,0 +1,15 @@
+join window_guy rightmost
+window_guy: - Pssst! Tutaj! Młody, skąd masz maskę w nocy?
+join J center
+J: - To pamiątka po dziadku.
+join window_guy rightmost
+window_guy: - Potrzebuje jej. Dobrze zapłacę.
+join J left
+J: - Nie jest na sprzedaż.
+join window_guy right
+window_guy: - Ale ja muszę ją mięć! Daj mi ją!
+join J leftmost
+J: - Puść mnie!
+leave J
+join window_guy center
+window_guy: - POLICJAAAAA! TUTAJ! ON MA MASKĘ!

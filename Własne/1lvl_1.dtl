@@ -1,0 +1,8 @@
+join Zleceniodawca leftmost
+Zleceniodawca: - Jesteś pewien ze dasz radę? Po ostatniej wpadce wysłali na ulicę dodatkowe patrole.
+join "Jack Mask" rightmost
+Jack: - Luz, ja jestem sam. W pojedynkę łatwiej zniknąć. Nie złapią mnie.
+join Zleceniodawca leftmost
+Zleceniodawca: -Oni też tak myśleli.
+join  rightmost
+Jack: - Oni nie byli mną.

@@ -19,8 +19,8 @@ func _set_state(new_state: State):
 	match _state:
 		State.PATROL:
 			#print("entering patrol state")
-			patrol_ai.set_physics_process(true)
-			chase_ai.set_physics_process(false)
+			patrol_ai.set_physics_process(false)
+			chase_ai.set_physics_process(true)
 		State.CHASE:
 			#print("entering chase state")
 			patrol_ai.set_physics_process(false)

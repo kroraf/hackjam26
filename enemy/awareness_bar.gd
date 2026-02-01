@@ -27,4 +27,3 @@ func show_temporarily():
 func _on_timer_timout():
 	var tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
 	tween.tween_property(self, "modulate", Color.TRANSPARENT, 1.0)
-	pass

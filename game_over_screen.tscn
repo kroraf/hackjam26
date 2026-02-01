@@ -1,3 +1,46 @@
 [gd_scene format=3 uid="uid://cclrh12ocrvee"]
 
-[node name="GameOverScreen" type="Node2D" unique_id=841136991]
+[ext_resource type="Texture2D" uid="uid://u13pypfhphds" path="res://ui/game_over.png" id="1_gt22q"]
+[ext_resource type="Script" uid="uid://bu2xdx731hxy" path="res://game_over_screen.gd" id="1_w3hxg"]
+
+[node name="GameOverScreen" type="Control" unique_id=1115258324]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_w3hxg")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1675109270]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -81.0
+offset_top = -55.0
+offset_right = 79.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_gt22q")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TextureRect" unique_id=827948640]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="Button" type="Button" parent="TextureRect" unique_id=1238053299]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 74.0
+offset_right = 188.0
+offset_bottom = 114.0
+text = "RETRY"
+
+[connection signal="pressed" from="TextureRect/Button" to="." method="_on_button_pressed"]

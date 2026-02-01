@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://b8h4n14tt1anw"]
+
+[ext_resource type="Texture2D" uid="uid://chvrv87g7l6hu" path="res://ui/image.png" id="1_08ejt"]
+[ext_resource type="Script" uid="uid://mf0q3c2rwwva" path="res://ui/main_screen.gd" id="1_og05u"]
+[ext_resource type="FontFile" uid="uid://kgk5v2edvnb" path="res://ui/nes_cyrillic.ttf" id="3_fkp2a"]
+
+[node name="MainScreen" type="Control" unique_id=332612216]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_og05u")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=245857861]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_08ejt")
+expand_mode = 2
+
+[node name="Button" type="Button" parent="." unique_id=840835434]
+layout_mode = 0
+offset_left = 103.0
+offset_top = 148.0
+offset_right = 218.0
+offset_bottom = 205.0
+theme_override_fonts/font = ExtResource("3_fkp2a")
+theme_override_font_sizes/font_size = 47
+text = "MASKA NA TWARZ!"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

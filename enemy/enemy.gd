@@ -5,7 +5,7 @@ extends CharacterBody2D
 @onready var radial_light: PointLight2D = $Anchor/RadialLight
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 @export var player: CharacterBody2D
-#@export var stats: EnemyStats
+@export var stats: EnemyStats
 @onready var awareness_bar: AwarenessBar = $AwarenessBar
 @onready var awareness_loose_timer: Timer = $AwarenessLooseTimer
 @onready var awareness_gain_timer: Timer = $AwarenessGainTimer
@@ -18,7 +18,7 @@ extends CharacterBody2D
 		if awareness <= 0: _on_awareness_zero()
 		if awareness >= max_awareness: _on_awareness_full()
 
-@export var max_awareness := 3.0
+@export var max_awareness := 5.0
 @onready var enemy_state_controller: EnemyStateController = $EnemyStateController
 
 
@@ -48,6 +48,8 @@ func _on_radial_area_body_exited(body: Node2D) -> void:
 	
 func _on_awareness_full():
 	EventBus.player_spotted.emit(self)
+	print("player spotted")
+	get_tree().reload_current_scene()
 	
 func _on_awareness_zero():
 	EventBus.player_lost.emit(self)

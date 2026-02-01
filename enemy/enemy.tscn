@@ -24,7 +24,7 @@ fill = 1
 fill_from = Vector2(0.508547, 0.50427353)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ppra6"]
-radius = 50.0
+radius = 18.439089
 
 [sub_resource type="Gradient" id="Gradient_p200p"]
 
@@ -109,6 +109,7 @@ shape = SubResource("CircleShape2D_p200p")
 [node name="Anchor" type="Node2D" parent="." unique_id=511153516]
 
 [node name="Sprite" type="Sprite2D" parent="Anchor" unique_id=2142855645]
+visible = false
 modulate = Color(1, 1, 0.09019608, 1)
 texture = ExtResource("2_5ffra")
 hframes = 5
@@ -116,7 +117,6 @@ vframes = 7
 frame = 5
 
 [node name="Sprite2D" type="Sprite2D" parent="Anchor" unique_id=303430188]
-visible = false
 self_modulate = Color(0.48570347, 0.48570353, 0.48570347, 1)
 texture_filter = 1
 texture = ExtResource("1_2mvqj")
@@ -183,14 +183,14 @@ script = ExtResource("4_p200p")
 character = NodePath("..")
 move_controller = NodePath("../EnemyMoveController")
 anchor = NodePath("../Anchor")
-speed = 15.0
+speed = 50.0
 
 [node name="ChaseAI" type="Node" parent="." unique_id=545560065 node_paths=PackedStringArray("character", "agent", "anchor", "move_controller")]
 script = ExtResource("7_y5vj3")
 character = NodePath("..")
 agent = NodePath("../NavigationAgent2D")
 anchor = NodePath("../Anchor")
-speed = 30.0
+speed = 50.0
 move_controller = NodePath("../EnemyMoveController")
 
 [node name="EnemyMoveController" type="Node" parent="." unique_id=1315847102]

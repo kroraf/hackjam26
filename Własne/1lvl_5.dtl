@@ -1,0 +1,5 @@
+join odbiorca right
+odbiorca: - Dzięki! To leki dla…
+join "Jack Mask" left
+"Jack Mask": - Nie chce nic wiedzieć. Mówiłem, Ty płacisz, ja dostarczam.
+odbiorca: - Jasne.

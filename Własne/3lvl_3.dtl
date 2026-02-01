@@ -1,0 +1,12 @@
+join Chory right
+Chory: - <Kaszlnięcie>, <kaszlnięcie>!
+join Dziewczynka left
+Dziewczynka: - Dziadku, ciszej!
+Chory: - <Kaszlnięcie>… staram się! <Kaszlnięcie>!
+Dziewczynka: - Dziadku, znajdą cię! Sprawdzą, że nie pracujesz!
+Chory: - <Kaszlnięcie>. Spokojnie dziecko, <kaszlnięcie>, niedługo mi przejdzie i wrócę do pra…
+join Dziewczynka leftmost
+join Chory rightmost
+join bad_guy center
+bad_guy: - Wykryto element nieporządany, klasa\: nieprzydatny. Rozpoczynam nautralizację.
+Dziewczynka: - Nie! Nieeeee!

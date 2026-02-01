@@ -1,0 +1,22 @@
+J: - Witaj piękna.
+join J right
+join dziewczyna left
+dziewczyna: - Oj! Prosiłam żebyś mnie nie straszyła! Wchodź zanim cię zobaczą. I ściagaj to paskudztwo z twarzy!
+update J [animation="Shake X"]
+leave J
+join Jack right
+Jack: - Tak lepiej?
+dziewczyna: - O wiele. Za dnia prawie zapominam jak wyglądasz.
+Jack: - Za dnia sama się czuje, jakbym nie istniała. Tylko w nocy mogę oddychać. Tylko nocą jestem wolna.
+Narrator: <Obejmują się, patrzac w noc.>
+dziewczyna: - Co zrobicie bez leków?
+Jack: - Eh. Już wiesz?
+dziewczyna: - Tak, dzisiaj przyszła wiadomość o zamknięciu linii. Mamy ich więcej nie produkować, a zapasy spalić.
+Jack: - Co za gnoje.
+dziewczyna: - Wiesz, że są ludzie…
+Jack: - Nie chce o tym rozmawiać.
+dziewczyna: - Dlatego powinnyśmy.
+Jack: - Nie jestem bohaterka.
+dziewczyna: -...z czego się cieszę, bo dlatego żyjesz. Ale chyba dłużej nie możemy nic nie robić. Będziesz musiała nawiązać kontakt.
+Jack: - Mogą nas złapać. Mogę Cie stracić.
+dziewczyna: - To prawda. Ale czasem po prostu trzeba. Czasem jeżeli możemy coś zrobić, to tak naprawdę nie mamy wyboru.
